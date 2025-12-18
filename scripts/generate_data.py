@@ -670,7 +670,7 @@ async def generate_messages(pool: Pool):
             ]
         }
 
-        for ad_id, user_id in zip(random.sample(ad_ids, min(30, len(ad_ids))), user_ids[:30]):
+        for ad_id, user_id in zip(random.sample(ad_ids, min(100, len(ad_ids))), user_ids[:100]):
             category_name = await conn.fetchval("""
                 SELECT c.name FROM ads a
                 JOIN categories c ON c.id = a.category_id
@@ -762,7 +762,7 @@ async def main():
         await generate_tags(pool)
         await generate_users(pool, 100)
         await generate_locations(pool, 50)
-        await generate_ads(pool, 150)
+        await generate_ads(pool, 5000)
         await generate_favorites_and_views(pool)
         await generate_messages(pool)
         await generate_reports(pool)

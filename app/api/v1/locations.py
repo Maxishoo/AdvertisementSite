@@ -94,9 +94,8 @@ async def get_locations(
             clean_city = re.sub(r'[^а-яА-Яa-zA-Z0-9\s\-_]',
                                 ' ', clean_city).strip()
         if len(clean_city) >= 3:
-            pattern = f"%{clean_city}%"
-            where_clauses.append(f"city ILIKE ${param_index}")
-            params.append(pattern)
+            where_clauses.append(f"city % ${param_index}")
+            params.append(clean_city)
             param_index += 1
 
     if district is not None:
@@ -105,9 +104,8 @@ async def get_locations(
             clean_district = re.sub(
                 r'[^а-яА-Яa-zA-Z0-9\s\-_]', ' ', clean_district).strip()
         if len(clean_district) >= 3:
-            pattern = f"%{clean_district}%"
-            where_clauses.append(f"district ILIKE ${param_index}")
-            params.append(pattern)
+            where_clauses.append(f"LOWER(district) % ${param_index}")
+            params.append(clean_district.lower())
             param_index += 1
 
     query_parts = [base_query]

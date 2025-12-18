@@ -5,7 +5,7 @@ from app.db.session import db
 from app.schemas.user import UserCreate, UserUpdate, UserOut
 from app.core.security import get_password_hash
 
-router = APIRouter(prefix="/users", tags=["users"])
+router = APIRouter(prefix="/users", tags=["Пользователи"])
 
 
 @router.post("/", response_model=UserOut, status_code=status.HTTP_201_CREATED)
@@ -109,11 +109,10 @@ async def get_users(
     param_count = 1
 
     if search is not None:
-        pattern = f"%{search}%"
         query_parts.append(
-            f" AND (username ILIKE ${param_count} OR first_name ILIKE ${param_count} OR last_name ILIKE ${param_count})"
+            f" AND (username || ' ' || COALESCE(first_name, '') || ' ' || COALESCE(last_name, '')) % ${param_count}"
         )
-        params.append(pattern)
+        params.append(search)
         param_count += 1
 
     if role:

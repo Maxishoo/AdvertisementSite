@@ -87,3 +87,17 @@ class AdStatisticsResponse(BaseModel):
     city: str
     owner_username: str
     owner_is_banned: bool
+
+
+class AdCreate2(BaseModel):
+    user_id: UUID
+    category_id: int
+    location_id: int
+    title: str
+    description: str
+    price: int
+    currency: str
+    moderation_status: str
+    is_active: bool
+    image_urls: str
+    tag_ids: Optional[List[int]]

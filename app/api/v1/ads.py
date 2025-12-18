@@ -223,28 +223,6 @@ async def build_ad_from_row(row):
     return ad_data
 
 
-# @router.get("/", response_model=List[AdOut])
-# async def get_ads(
-#     skip: int = Query(0, ge=0, alias="skip"),
-#     limit: int = Query(20, ge=1, le=100, alias="limit"),
-#     category_id: Optional[int] = None,
-#     min_price: Optional[float] = Query(None, ge=0),
-#     max_price: Optional[float] = Query(None, ge=0),
-#     city: Optional[str] = None,
-#     tag_ids: Optional[List[int]] = Query(None),
-#     min_views: Optional[int] = Query(None, ge=0),
-#     created_after: Optional[datetime] = None,
-#     created_before: Optional[datetime] = None,
-#     has_images: Optional[bool] = None,
-#     owner_id: Optional[UUID] = None,
-#     search: Optional[str] = None,
-#     sort_by: str = Query(
-#         "newest", regex="^(price_asc|price_desc|newest|oldest|views)$"),
-#     moderation_status: str = Query(
-#         "APPROVED", regex="^(PENDING|APPROVED|REJECTED)$"),
-#     is_active: bool = Query(True)
-# ):
-
 @router.get("/", response_model=List[AdOut])
 async def get_ads(
     skip: int = Query(0, ge=0, alias="skip",
@@ -316,12 +294,12 @@ async def get_ads(
             params.append(search_pattern)
 
             search_condition = (
-                f"(a.title ILIKE ${pattern_param_index} OR "
-                f"a.description ILIKE ${pattern_param_index} OR "
+                f"(a.title % ${pattern_param_index} OR "
+                f"a.description % ${pattern_param_index} OR "
                 f"EXISTS ("
                 f"  SELECT 1 FROM ad_tags at2 "
                 f"  JOIN tags t2 ON t2.id = at2.tag_id "
-                f"  WHERE at2.ad_id = a.id AND t2.name ILIKE ${pattern_param_index}"
+                f"  WHERE at2.ad_id = a.id AND t2.name % ${pattern_param_index}"
                 f"))"
             )
             where_conditions.append(search_condition)
@@ -355,8 +333,8 @@ async def get_ads(
             params.append(created_before)
 
         if city:
-            where_conditions.append(f"l.city ILIKE ${len(params) + 1}")
-            params.append(f"%{city}%")
+            where_conditions.append(f"LOWER(l.city) % ${len(params) + 1}")
+            params.append(city.strip().lower())
 
         if has_images is not None:
             if has_images:

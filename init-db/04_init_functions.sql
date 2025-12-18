@@ -13,9 +13,9 @@ RETURNS TABLE (
     currency VARCHAR(10),
     city VARCHAR(100),
     category_name TEXT,
-    views_last_period INTEGER,
-    messages_last_period INTEGER,
-    favorites_last_period INTEGER,
+    views_last_period BIGINT,
+    messages_last_period BIGINT,
+    favorites_last_period BIGINT,
     trending_score NUMERIC,
     created_at TIMESTAMPTZ
 ) AS $$
@@ -90,4 +90,4 @@ BEGIN
     
     RETURN suggested_price;
 END;
-$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+$$ LANGUAGE plpgsql STABLE;

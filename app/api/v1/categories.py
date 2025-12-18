@@ -97,7 +97,7 @@ async def get_categories(
         if len(clean_search) >= 3:
             pattern = f"%{clean_search}%"
             where_clauses.append(
-                f"(name ILIKE ${param_index} OR slug ILIKE ${param_index})"
+                f"(name % ${param_index} OR slug % ${param_index})"
             )
             params.append(pattern)
             param_index += 1

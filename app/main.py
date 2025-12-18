@@ -2,7 +2,8 @@ from fastapi import FastAPI
 from app.db.session import db
 from app.config import settings
 from app.api.v1 import (users, ads, categories, locations,
-                        tags, favorites, views, messages, reports, analitics)
+                        tags, favorites, views, messages,
+                        reports, analitics, batch_import)
 
 app = FastAPI(
     title="Advertisements API",
@@ -32,6 +33,7 @@ app.include_router(views.router, prefix=settings.API_V1_STR)
 app.include_router(messages.router, prefix=settings.API_V1_STR)
 app.include_router(reports.router, prefix=settings.API_V1_STR)
 app.include_router(analitics.router, prefix=settings.API_V1_STR)
+app.include_router(batch_import.router, prefix=settings.API_V1_STR)
 
 
 @app.get("/")

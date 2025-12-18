@@ -153,15 +153,13 @@ async def get_user_messages(
     if search is not None:
         clean_search = search.strip()
         if not re.match(r'^[а-яА-Яa-zA-Z0-9\s\-_]+$', clean_search):
-            clean_search = re.sub(
-                r'[^а-яА-Яa-zA-Z0-9\s\-_]', ' ', clean_search).strip()
+            clean_search = re.sub(r'[^а-яА-Яa-zA-Z0-9\s\-_]', ' ', clean_search).strip()
 
         if len(clean_search) >= 1:
-            pattern = f"%{clean_search}%"
             where_clauses.append(
-                f"(m.text ILIKE ${param_index} OR s.username ILIKE ${param_index})"
+                f"(LOWER(m.text) % ${param_index}"
             )
-            params.append(pattern)
+            params.append(clean_search.lower())
             param_index += 1
 
     query_parts = [base_query]
